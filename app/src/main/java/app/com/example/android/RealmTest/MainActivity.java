@@ -88,12 +88,12 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater li = LayoutInflater.from(this);
         View dialogView = li.inflate(R.layout.entry_form, null);
 
-        entryDate = (EditText) findViewById(R.id.in_date);
-        pain1 = (EditText) findViewById(R.id.etPainMorn);
-        pain2 = (EditText) findViewById(R.id.etPainMid);
-        pain3 = (EditText) findViewById(R.id.etPainNight);
-        sleepL = (EditText) findViewById(R.id.etSleepLength);
-        sleepT = (EditText) findViewById(R.id.in_time);
+        entryDate = (EditText) dialogView.findViewById(R.id.in_date);
+        pain1 = (EditText) dialogView.findViewById(R.id.etPainMorn);
+        pain2 = (EditText) dialogView.findViewById(R.id.etPainMid);
+        pain3 = (EditText) dialogView.findViewById(R.id.etPainNight);
+        sleepL = (EditText) dialogView.findViewById(R.id.etSleepLength);
+        sleepT = (EditText) dialogView.findViewById(R.id.in_time);
 
         builder.setView(dialogView);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
        entryDate.setOnClickListener(new View.OnClickListener() {
            @Override
             public void onClick (View v){
-                final Calendar c = Calendar.getInstance();
+                Calendar c = Calendar.getInstance();
                 mYear = c.get(Calendar.YEAR);
                 mMonth = c.get(Calendar.MONTH);
                 mDay = c.get(Calendar.DAY_OF_MONTH);
@@ -135,6 +135,27 @@ public class MainActivity extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
+        sleepT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View v){
+                Calendar c = Calendar.getInstance();
+                mHour = c.get(Calendar.HOUR_OF_DAY);
+                mMinute = c.get(Calendar.MINUTE);
+
+                TimePickerDialog timePickerDialog;
+                timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                        int hour = hourOfDay % 12;
+                        sleepT.setText(String.format("%02d:%02d %s", hour == 0 ? 12 : hour,
+                                minute, hourOfDay < 12 ? "am" : "pm"));
+                    }
+                }, mHour, mMinute, false);
+                timePickerDialog.setTitle("Select Time");
+                timePickerDialog.show();
+            }
+        });
+
 
         builder.show();
 
