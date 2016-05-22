@@ -9,8 +9,10 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +27,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 
@@ -117,9 +120,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-       entryDate.setOnClickListener(new View.OnClickListener() {
+       entryDate.setOnTouchListener(new View.OnTouchListener() {
            @Override
-            public void onClick (View v){
+            public boolean onTouch (View v, MotionEvent event){
+                int inType = entryDate.getInputType();
+                entryDate.setInputType(InputType.TYPE_NULL);
+                entryDate.onTouchEvent(event);
+                entryDate.setInputType(inType);
                 Calendar c = Calendar.getInstance();
                 mYear = c.get(Calendar.YEAR);
                 mMonth = c.get(Calendar.MONTH);
@@ -133,11 +140,16 @@ public class MainActivity extends AppCompatActivity {
                 }, mYear, mMonth, mDay);
                 datePickerDialog.setTitle("Select Date");
                 datePickerDialog.show();
+                return true;
             }
         });
-        sleepT.setOnClickListener(new View.OnClickListener() {
+        sleepT.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick (View v){
+            public boolean onTouch (View v, MotionEvent event){
+                int inType = sleepT.getInputType();
+                sleepT.setInputType(InputType.TYPE_NULL);
+                sleepT.onTouchEvent(event);
+                sleepT.setInputType(inType);
                 Calendar c = Calendar.getInstance();
                 mHour = c.get(Calendar.HOUR_OF_DAY);
                 mMinute = c.get(Calendar.MINUTE);
@@ -153,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
                 }, mHour, mMinute, false);
                 timePickerDialog.setTitle("Select Time");
                 timePickerDialog.show();
+                return true;
             }
         });
 
@@ -160,26 +173,8 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
 
     }
-    public void pickTime(){
-        final Calendar c = Calendar.getInstance();
-        mHour = c.get(Calendar.HOUR_OF_DAY);
-        mMinute = c.get(Calendar.MINUTE);
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-                int hour = hourOfDay % 12;
-                sleepT.setText(String.format("%02d:%02d %s", hour == 0 ? 12 : hour,
-                        minute, hourOfDay < 12 ? "am" : "pm"));
-            }
-        }, mHour, mMinute, false);
-        timePickerDialog.show();
-    }
-
-
-
-    public void addEntry(String entryDate, int pain1,int pain2,int pain3,Double sleepL,String sleepT) {
+    public void addEntry(String entryDate, int pain1, int pain2, int pain3, Double sleepL, String sleepT) {
 
         realm.beginTransaction();
         Entry entry = realm.createObject(Entry.class);

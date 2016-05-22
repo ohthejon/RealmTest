@@ -1,5 +1,7 @@
 package app.com.example.android.RealmTest;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -10,6 +12,7 @@ public class Entry extends RealmObject {
     //private int id;
 
     @PrimaryKey
+    private int id;
     private String entryDate;
 
     private int painMorn;
@@ -19,6 +22,10 @@ public class Entry extends RealmObject {
     private double sleepLength;
 
     public Entry() {}
+
+    public int getId() { return id; }
+
+    public void setId(int id) {this.id = id;}
 
     public String getEntryDate() { return entryDate; }
 
