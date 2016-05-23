@@ -120,51 +120,56 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-       entryDate.setOnTouchListener(new View.OnTouchListener() {
-           @Override
+        entryDate.setOnTouchListener(new View.OnTouchListener() {
+            @Override
             public boolean onTouch (View v, MotionEvent event){
-                int inType = entryDate.getInputType();
-                entryDate.setInputType(InputType.TYPE_NULL);
-                entryDate.onTouchEvent(event);
-                entryDate.setInputType(inType);
-                Calendar c = Calendar.getInstance();
-                mYear = c.get(Calendar.YEAR);
-                mMonth = c.get(Calendar.MONTH);
-                mDay = c.get(Calendar.DAY_OF_MONTH);
+                if(event.getAction() == event.ACTION_UP) {
+                    int inType = entryDate.getInputType();
+                    entryDate.setInputType(InputType.TYPE_NULL);
+                    entryDate.onTouchEvent(event);
+                    entryDate.setInputType(inType);
+                    Calendar c = Calendar.getInstance();
+                    mYear = c.get(Calendar.YEAR);
+                    mMonth = c.get(Calendar.MONTH);
+                    mDay = c.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog datePickerDialog;
-                datePickerDialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    public void onDateSet(DatePicker datepicker, int year, int monthOfYear, int dayOfMonth) {
-                        entryDate.setText((monthOfYear + 1) + "-" + dayOfMonth + "-" + year);
-                    }
-                }, mYear, mMonth, mDay);
-                datePickerDialog.setTitle("Select Date");
-                datePickerDialog.show();
+                    DatePickerDialog datePickerDialog;
+
+                    datePickerDialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
+                        public void onDateSet(DatePicker datepicker, int year, int monthOfYear, int dayOfMonth) {
+                            entryDate.setText((monthOfYear + 1) + "-" + dayOfMonth + "-" + year);
+                        }
+                    }, mYear, mMonth, mDay);
+                    datePickerDialog.setTitle("Select Date");
+                    datePickerDialog.show();
+                }
                 return true;
             }
         });
         sleepT.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch (View v, MotionEvent event){
-                int inType = sleepT.getInputType();
-                sleepT.setInputType(InputType.TYPE_NULL);
-                sleepT.onTouchEvent(event);
-                sleepT.setInputType(inType);
-                Calendar c = Calendar.getInstance();
-                mHour = c.get(Calendar.HOUR_OF_DAY);
-                mMinute = c.get(Calendar.MINUTE);
+                if(event.getAction() == event.ACTION_UP) {
+                    int inType = sleepT.getInputType();
+                    sleepT.setInputType(InputType.TYPE_NULL);
+                    sleepT.onTouchEvent(event);
+                    sleepT.setInputType(inType);
+                    Calendar c = Calendar.getInstance();
+                    mHour = c.get(Calendar.HOUR_OF_DAY);
+                    mMinute = c.get(Calendar.MINUTE);
 
-                TimePickerDialog timePickerDialog;
-                timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    TimePickerDialog timePickerDialog;
+                    timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-                        int hour = hourOfDay % 12;
-                        sleepT.setText(String.format("%02d:%02d %s", hour == 0 ? 12 : hour,
-                                minute, hourOfDay < 12 ? "am" : "pm"));
-                    }
-                }, mHour, mMinute, false);
-                timePickerDialog.setTitle("Select Time");
-                timePickerDialog.show();
+                            int hour = hourOfDay % 12;
+                            sleepT.setText(String.format("%02d:%02d %s", hour == 0 ? 12 : hour,
+                                    minute, hourOfDay < 12 ? "am" : "pm"));
+                        }
+                    }, mHour, mMinute, false);
+                    timePickerDialog.setTitle("Select Time");
+                    timePickerDialog.show();
+                }
                 return true;
             }
         });
@@ -176,30 +181,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void addEntry(String entryDate, int pain1, int pain2, int pain3, Double sleepL, String sleepT) {
-        RealmResults<Entry> results = realm.where(Entry.class).equalTo("entryDate", entryDate.toString()).findAll();
-
-
-        //realm.beginTransaction();
-        if(results.size() == 0) {
-            Entry entry = realm.createObject(Entry.class);
-            entry.setEntryDate(entryDate.toString());
-            entry.setPainMorn(pain1);
-            entry.setPainMid(pain2);
-            entry.setPainNight(pain3);
-            entry.setSleepLength(Double.parseDouble(sleepL.toString()));
-            entry.setSleepTime(sleepT.toString());
-        } else {
-            Entry entry = realm.createObject(Entry.class);
-            results.get(0).setEntryDate(entryDate.toString());
-            results.get(0).setPainMorn(pain1);
-            results.get(0).setPainMid(pain2);
-            results.get(0).setPainNight(pain3);
-            results.get(0).setSleepLength(Double.parseDouble(sleepL.toString()));
-            results.get(0).setSleepTime(sleepT.toString());
-        }
         realm.beginTransaction();
-        Entry realmEntry = realm.copyToRealmOrUpdate(entry);
+        Entry entry = realm.createObject(Entry.class);
+        entry.setEntryDate(entryDate.toString());
+        entry.setPainMorn(pain1);
+        entry.setPainMid(pain2);
+        entry.setPainNight(pain3);
+        entry.setSleepLength(Double.parseDouble(sleepL.toString()));
+        entry.setSleepTime(sleepT.toString());
         realm.commitTransaction();
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

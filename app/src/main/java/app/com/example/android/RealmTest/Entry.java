@@ -9,10 +9,8 @@ import io.realm.annotations.PrimaryKey;
  * Created by ohthe on 4/26/2016.
  */
 public class Entry extends RealmObject {
-    //private int id;
 
     @PrimaryKey
-    //private int id;
     private String entryDate;
 
     private int painMorn;
@@ -22,10 +20,6 @@ public class Entry extends RealmObject {
     private double sleepLength;
 
     public Entry() {}
-
-    //public int getId() { return id; }
-
-    //public void setId(int id) {this.id = id;}
 
     public String getEntryDate() { return entryDate; }
 
