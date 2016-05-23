@@ -174,22 +174,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         builder.show();
 
     }
 
 
-    public void addEntry(String entryDate, int pain1, int pain2, int pain3, Double sleepL, String sleepT) {
-        realm.beginTransaction();
-        Entry entry = realm.createObject(Entry.class);
-        entry.setEntryDate(entryDate.toString());
-        entry.setPainMorn(pain1);
-        entry.setPainMid(pain2);
-        entry.setPainNight(pain3);
-        entry.setSleepLength(Double.parseDouble(sleepL.toString()));
-        entry.setSleepTime(sleepT.toString());
-        realm.commitTransaction();
+    public void addEntry(final String entryDate, final int pain1, final int pain2, final int pain3, final Double sleepL, final String sleepT) {
+        RealmResults<Entry> results = realm.where(Entry.class).findAll();
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Entry entry = new Entry();
+                entry.setEntryDate(entryDate.toString());
+                entry.setPainMorn(pain1);
+                entry.setPainMid(pain2);
+                entry.setPainNight(pain3);
+                entry.setSleepLength(Double.parseDouble(sleepL.toString()));
+                entry.setSleepTime(sleepT.toString());
+            }
+        });
+
 
     }
 
