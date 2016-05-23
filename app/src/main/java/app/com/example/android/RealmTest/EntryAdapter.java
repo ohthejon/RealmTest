@@ -45,36 +45,5 @@ public class EntryAdapter extends RealmBasedRecyclerViewAdapter<Entry, EntryAdap
 
     }
 
-    /*public View getView(int position, View convertView, ViewGroup parent) {
-        // Get the data item for this position
-        Entry entry = getItem(position);
-        // Check if an existing view is being reused, otherwise inflate the view
-        ViewHolder viewHolder;
-        if (convertView == null) {
-            viewHolder = new ViewHolder();
-            LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.data_entry, parent, false);
-            viewHolder.painMorn = (TextView) convertView.findViewById(R.id.tvpainMorn);
-            viewHolder.painMid = (TextView) convertView.findViewById(R.id.tvpainMid);
-            viewHolder.painNight = (TextView) convertView.findViewById(R.id.tvpainNight);
-            viewHolder.sleepTime = (TextView) convertView.findViewById(R.id.tvsleepTime);
-            viewHolder.sleepLength = (TextView) convertView.findViewById(R.id.tvsleepLength);
-
-            convertView.setTag(viewHolder);
-        }else{
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
-
-        // Populate the data into the template view using the data object
-        viewHolder.painMorn.setText(""+entry.painMorn);
-        viewHolder.painMid.setText(""+entry.painMid);
-        viewHolder.painNight.setText(""+entry.painNight);
-        viewHolder.sleepTime.setText(""+entry.sleepTime);
-        viewHolder.sleepLength.setText(""+entry.sleepLength);
-
-        // Return the completed view to render on screen
-        return convertView;
-    }*/
-
 
 }
