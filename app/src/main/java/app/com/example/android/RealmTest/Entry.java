@@ -16,6 +16,7 @@ public class Entry extends RealmObject {
     private int painMorn;
     private int painMid;
     private int painNight;
+    private double averagePain;
     private String sleepTime;
     private double sleepLength;
 
@@ -44,6 +45,10 @@ public class Entry extends RealmObject {
     public void setPainNight(int painNight){
         this.painNight = painNight;
     }
+
+    public double getAveragePain() { return averagePain; }
+
+    public void setAveragePain(double averagePain){ this.averagePain = averagePain; }
 
     public String getSleepTime() {
         return sleepTime;
