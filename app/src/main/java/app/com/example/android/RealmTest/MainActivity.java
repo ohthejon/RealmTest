@@ -34,6 +34,7 @@ import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -72,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         EntryAdapter entryAdapter = new EntryAdapter(this, entries, true, true);
         RealmRecyclerView realmRecyclerView = (RealmRecyclerView) findViewById(R.id.realm_recycler_view);
         realmRecyclerView.setAdapter(entryAdapter);
-
     }
 
     protected void onDestroy() {
@@ -174,16 +174,31 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void addEntry(String entryDate, int pain1, int pain2, int pain3, Double sleepL, String sleepT) {
 
+    public void addEntry(String entryDate, int pain1, int pain2, int pain3, Double sleepL, String sleepT) {
+        RealmResults<Entry> results = realm.where(Entry.class).equalTo("entryDate", entryDate.toString()).findAll();
+
+
+        //realm.beginTransaction();
+        if(results.size() == 0) {
+            Entry entry = realm.createObject(Entry.class);
+            entry.setEntryDate(entryDate.toString());
+            entry.setPainMorn(pain1);
+            entry.setPainMid(pain2);
+            entry.setPainNight(pain3);
+            entry.setSleepLength(Double.parseDouble(sleepL.toString()));
+            entry.setSleepTime(sleepT.toString());
+        } else {
+            Entry entry = realm.createObject(Entry.class);
+            results.get(0).setEntryDate(entryDate.toString());
+            results.get(0).setPainMorn(pain1);
+            results.get(0).setPainMid(pain2);
+            results.get(0).setPainNight(pain3);
+            results.get(0).setSleepLength(Double.parseDouble(sleepL.toString()));
+            results.get(0).setSleepTime(sleepT.toString());
+        }
         realm.beginTransaction();
-        Entry entry = realm.createObject(Entry.class);
-        entry.setEntryDate(entryDate.toString());
-        entry.setPainMorn(pain1);
-        entry.setPainMid(pain2);
-        entry.setPainNight(pain3);
-        entry.setSleepLength(Double.parseDouble(sleepL.toString()));
-        entry.setSleepTime(sleepT.toString());
+        Entry realmEntry = realm.copyToRealmOrUpdate(entry);
         realm.commitTransaction();
     }
 

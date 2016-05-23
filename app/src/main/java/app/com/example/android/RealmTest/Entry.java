@@ -12,7 +12,7 @@ public class Entry extends RealmObject {
     //private int id;
 
     @PrimaryKey
-    private int id;
+    //private int id;
     private String entryDate;
 
     private int painMorn;
@@ -23,9 +23,9 @@ public class Entry extends RealmObject {
 
     public Entry() {}
 
-    public int getId() { return id; }
+    //public int getId() { return id; }
 
-    public void setId(int id) {this.id = id;}
+    //public void setId(int id) {this.id = id;}
 
     public String getEntryDate() { return entryDate; }
 
