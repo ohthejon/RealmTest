@@ -180,21 +180,19 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void addEntry(final String entryDate, final int pain1, final int pain2, final int pain3, final Double sleepL, final String sleepT) {
+
+        Entry entry = new Entry();
+        entry.setEntryDate(entryDate.toString());
+        entry.setPainMorn(pain1);
+        entry.setPainMid(pain2);
+        entry.setPainNight(pain3);
+        entry.setSleepLength(Double.parseDouble(sleepL.toString()));
+        entry.setSleepTime(sleepT.toString());
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(entry);
+        realm.commitTransaction();
+
         RealmResults<Entry> results = realm.where(Entry.class).findAll();
-
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                Entry entry = new Entry();
-                entry.setEntryDate(entryDate.toString());
-                entry.setPainMorn(pain1);
-                entry.setPainMid(pain2);
-                entry.setPainNight(pain3);
-                entry.setSleepLength(Double.parseDouble(sleepL.toString()));
-                entry.setSleepTime(sleepT.toString());
-            }
-        });
-
 
     }
 
