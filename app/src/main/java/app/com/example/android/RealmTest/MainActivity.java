@@ -209,7 +209,6 @@ public class MainActivity extends AppCompatActivity {
         realm.commitTransaction();
 
         RealmResults<Entry> results = realm.where(Entry.class).findAll();
-
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
