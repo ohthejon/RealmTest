@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -32,6 +33,7 @@ import java.util.Date;
 import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
 import io.realm.RealmQuery;
@@ -43,8 +45,9 @@ public class MainActivity extends AppCompatActivity {
     private int mHour, mMinute, mYear, mMonth, mDay;
     EditText pain1, pain2, pain3, sleepL, sleepT, entryDate;
     private Realm realm;
+    private RealmChangeListener entryListener;
     private RealmConfiguration realmConfig;
-
+    private Entry entry;
 
     final static int REQ_CODE = 1;
     @Override
@@ -53,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.entry_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
 
         FloatingActionButton addEntryBtn = (FloatingActionButton) findViewById(R.id.addEntryBtn);
@@ -70,9 +72,11 @@ public class MainActivity extends AppCompatActivity {
         resetRealm();
         realm = Realm.getInstance(realmConfig);
         RealmResults<Entry> entries = realm.where(Entry.class).findAllSorted("entryDate");
-        EntryAdapter entryAdapter = new EntryAdapter(this, entries, true, true);
+        final EntryAdapter entryAdapter = new EntryAdapter(this, entries, true, true);
         RealmRecyclerView realmRecyclerView = (RealmRecyclerView) findViewById(R.id.realm_recycler_view);
         realmRecyclerView.setAdapter(entryAdapter);
+
+
     }
 
     protected void onDestroy() {
@@ -181,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void addEntry(String entryDate, int pain1, int pain2, int pain3, Double sleepL, String sleepT) {
 
-        RealmResults<Entry> results = realm.where(Entry.class).findAll();
         int nonNullPainCount = 3;
         if(pain1 < 1){
             nonNullPainCount--;
@@ -205,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
         realm.copyToRealmOrUpdate(entry);
         realm.commitTransaction();
 
+        RealmResults<Entry> results = realm.where(Entry.class).findAll();
 
     }
 
@@ -213,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

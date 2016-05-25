@@ -1,6 +1,7 @@
 package app.com.example.android.RealmTest;
 
 import android.content.Context;
+import android.support.annotation.UiThread;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,18 +21,21 @@ import io.realm.RealmViewHolder;
  */
 public class EntryAdapter extends RealmBasedRecyclerViewAdapter<Entry, EntryAdapter.ViewHolder> {
 
+    public TextView tvEntryDate, tvAvgDayPain;
+    private final MainActivity activity;
+    public RealmResults<Entry> realmResults;
 
-    public class ViewHolder extends RealmViewHolder {
-        public TextView tvEntryDate, tvAvgDayPain;
+    public class ViewHolder extends RecyclerView.ViewHolderr {
         public ViewHolder(FrameLayout container){
             super(container);
-            this.tvEntryDate = (TextView) container.findViewById(R.id.tv_entry_date);
-            this.tvAvgDayPain = (TextView) container.findViewById(R.id.tv_avg_pain);
+            tvEntryDate = (TextView) container.findViewById(R.id.tv_entry_date);
+            tvAvgDayPain = (TextView) container.findViewById(R.id.tv_avg_pain);
         }
     }
 
-    public EntryAdapter(Context context, RealmResults<Entry> realmResults, boolean automaticUpdate, boolean animateResults) {
-        super(context, realmResults, automaticUpdate, animateResults);
+    public EntryAdapter(MainActivity activity, RealmResults<Entry> realmResults, boolean automaticUpdate, boolean animateResults) {
+        super(activity, realmResults, automaticUpdate, animateResults);
+        this.activity = activity;
     }
 
     public ViewHolder onCreateRealmViewHolder(ViewGroup viewGroup, int viewType) {
@@ -41,11 +45,11 @@ public class EntryAdapter extends RealmBasedRecyclerViewAdapter<Entry, EntryAdap
     }
 
     public void onBindRealmViewHolder(ViewHolder viewHolder, int position) {
-        final Entry entry = realmResults.get(position);
-        viewHolder.tvEntryDate.setText(entry.getEntryDate());
-        viewHolder.tvAvgDayPain.setText(""+entry.getAveragePain());
-
+//        final Entry entry = realmResults.get(position);
+//        tvEntryDate.setText(entry.getEntryDate());
+//        tvAvgDayPain.setText(""+entry.getAveragePain());
+        Entry entry = realmResults.get(position);
+        viewHolder.
     }
-
 
 }
