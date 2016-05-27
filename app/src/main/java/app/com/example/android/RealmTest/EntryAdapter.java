@@ -43,6 +43,7 @@ public class EntryAdapter extends RealmRecyclerViewAdapter<Entry, EntryAdapter.V
         this.listener = new RealmChangeListener<RealmResults<Entry>>() {
             @Override
             public void onChange(RealmResults<Entry> results) {
+
                 notifyDataSetChanged();
             }
         };
@@ -52,6 +53,7 @@ public class EntryAdapter extends RealmRecyclerViewAdapter<Entry, EntryAdapter.V
     }
 
     public class ViewHolder extends RealmViewHolder {
+        public Entry data;
         public ViewHolder(FrameLayout container){
             super(container);
             tvEntryDate = (TextView) container.findViewById(R.id.tv_entry_date);
@@ -113,6 +115,7 @@ public class EntryAdapter extends RealmRecyclerViewAdapter<Entry, EntryAdapter.V
 
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         Entry entry = getData().get(position);
+        viewHolder.data = entry;
         tvEntryDate.setText(entry.getEntryDate());
         tvAvgDayPain.setText(""+entry.getAveragePain());
     }
