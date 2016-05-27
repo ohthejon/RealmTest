@@ -13,23 +13,43 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
-import io.realm.RealmBasedRecyclerViewAdapter;
+import io.realm.RealmRecyclerViewAdapter;
 import io.realm.RealmChangeListener;
 import io.realm.RealmList;
+import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.RealmViewHolder;
 
 /**
  * Created by ohthe on 4/26/2016.
  */
-public class EntryAdapter extends RealmBasedRecyclerViewAdapter<Entry, EntryAdapter.ViewHolder> {
+public class EntryAdapter extends RealmRecyclerViewAdapter<Entry, EntryAdapter.ViewHolder> {
 
+    protected LayoutInflater inflater;
     public TextView tvEntryDate, tvAvgDayPain;
-    private RealmResults<Entry> adapterData;
-    protected Context context;
+    private OrderedRealmCollection<Entry> adapterData;
+    //protected Context context;
     private final RealmChangeListener listener;
+    private final MainActivity activity;
 
+
+    public EntryAdapter(MainActivity activity, OrderedRealmCollection<Entry> data) {
+        super(activity, data, true);
+        this.activity = activity;
+        this.adapterData = data;
+        this.inflater = LayoutInflater.from(activity);
+        this.listener = new RealmChangeListener<RealmResults<Entry>>() {
+            @Override
+            public void onChange(RealmResults<Entry> results) {
+                notifyDataSetChanged();
+            }
+        };
+        if (data != null) {
+            addListener(data);
+        }
+    }
 
     public class ViewHolder extends RealmViewHolder {
         public ViewHolder(FrameLayout container){
@@ -38,34 +58,6 @@ public class EntryAdapter extends RealmBasedRecyclerViewAdapter<Entry, EntryAdap
             tvAvgDayPain = (TextView) container.findViewById(R.id.tv_avg_pain);
         }
     }
-
-    public EntryAdapter(Context context, RealmResults<Entry> realmResults, boolean automaticUpdate, boolean animateResults) {
-        super(context, realmResults, automaticUpdate, animateResults);
-        this.context = context;
-        this.adapterData = realmResults;
-        this.listener = new RealmChangeListener<RealmResults<Entry>>() {
-            @Override
-            public void onChange(RealmResults<Entry> results) {
-                notifyDataSetChanged();
-            }
-        };
-        if (realmResults != null) {
-            addListener(realmResults);
-        }
-    }
-
-    public ViewHolder onCreateRealmViewHolder(ViewGroup viewGroup, int viewType) {
-        View v = inflater.inflate(R.layout.item_view, viewGroup, false);
-        ViewHolder vh = new ViewHolder((FrameLayout) v);
-        return vh;
-    }
-
-    public void onBindRealmViewHolder(ViewHolder viewHolder, int position) {
-        Entry entry = realmResults.get(position);
-        tvEntryDate.setText(entry.getEntryDate());
-        tvAvgDayPain.setText(""+entry.getAveragePain());
-    }
-
     public long getItemId(int position) {
         // TODO: find better solution once we have unique IDs
         return position;
@@ -85,31 +77,44 @@ public class EntryAdapter extends RealmBasedRecyclerViewAdapter<Entry, EntryAdap
         }
         return adapterData.get(position);
     }
-    private void addListener(RealmResults<Entry> realmResults) {
-        if (realmResults instanceof RealmResults) {
-            RealmResults entries = (RealmResults) realmResults;
-            entries.addChangeListener(listener);
+    private void addListener(OrderedRealmCollection<Entry> data) {
+        if (data instanceof RealmResults) {
+            RealmResults realmResults = (RealmResults) data;
+            realmResults.addChangeListener(listener);
         }
     }
 
-    private void removeListener(RealmResults<Entry> realmResults) {
-        if (realmResults instanceof RealmResults) {
-            RealmResults entries = (RealmResults) realmResults;
-            entries.removeChangeListener(listener);
+    private void removeListener(OrderedRealmCollection<Entry> data) {
+        if (data instanceof RealmResults) {
+            RealmResults realmResults = (RealmResults) data;
+            realmResults.removeChangeListener(listener);
         }
     }
 
-    public void updateData(RealmResults<Entry> realmResults) {
+    public void updateData(OrderedRealmCollection<Entry> data) {
         if (listener != null) {
             if (adapterData != null) {
-                removeListener(realmResults);
+                removeListener(adapterData);
             }
-            if (realmResults != null) {
-                addListener(realmResults);
+            if (data != null) {
+                addListener(data);
             }
         }
 
-        this.adapterData = realmResults;
+        this.adapterData = data;
         notifyDataSetChanged();
     }
+
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        View v = inflater.inflate(R.layout.item_view, viewGroup, false);
+        ViewHolder vh = new ViewHolder((FrameLayout) v);
+        return vh;
+    }
+
+    public void onBindViewHolder(ViewHolder viewHolder, int position) {
+        Entry entry = getData().get(position);
+        tvEntryDate.setText(entry.getEntryDate());
+        tvAvgDayPain.setText(""+entry.getAveragePain());
+    }
+
 }

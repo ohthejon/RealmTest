@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.KeyEvent;
@@ -32,6 +33,7 @@ import java.util.Date;
 
 import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 
+import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private RealmChangeListener entryListener;
     private RealmConfiguration realmConfig;
     private Entry entry;
+    private RecyclerView realmRecyclerView;
 
     final static int REQ_CODE = 1;
     @Override
@@ -71,11 +74,12 @@ public class MainActivity extends AppCompatActivity {
         // Open the Realm for the UI thread.
         resetRealm();
         realm = Realm.getInstance(realmConfig);
-        RealmResults<Entry> entries = realm.where(Entry.class).findAllSorted("entryDate");
-        final EntryAdapter entryAdapter = new EntryAdapter(this, entries, true, true);
-        RealmRecyclerView realmRecyclerView = (RealmRecyclerView) findViewById(R.id.realm_recycler_view);
-        realmRecyclerView.setAdapter(entryAdapter);
-
+        realmRecyclerView = (RecyclerView) findViewById(R.id.realm_recycler_view);
+        //OrderedRealmCollection<Entry> entries = realm.where(Entry.class).findAllAsync();
+        //final EntryAdapter entryAdapter = new EntryAdapter(this, entries);
+        realmRecyclerView.setAdapter(new EntryAdapter(this, realm.where(Entry.class).findAllAsync()));
+        realmRecyclerView.setHasFixedSize(true);
+        //realmRecyclerView.setAdapter(entryAdapter);
 
     }
 
@@ -208,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
         realm.copyToRealmOrUpdate(entry);
         realm.commitTransaction();
 
-        RealmResults<Entry> results = realm.where(Entry.class).findAll();
+        OrderedRealmCollection<Entry> results = realm.where(Entry.class).findAll();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
