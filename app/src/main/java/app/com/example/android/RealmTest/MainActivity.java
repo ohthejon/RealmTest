@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new EntryAdapter(this, realm.where(Entry.class).findAllAsync()));
+        recyclerView.setAdapter(new EntryAdapter(this, realm.where(Entry.class).findAllSorted("entryDate")));
         recyclerView.setHasFixedSize(true);
         //recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
     }
@@ -214,8 +214,9 @@ public class MainActivity extends AppCompatActivity {
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(entry);
         realm.commitTransaction();
+        setUpRecyclerView();
+        //OrderedRealmCollection<Entry> results = realm.where(Entry.class).findAll();
 
-        OrderedRealmCollection<Entry> results = realm.where(Entry.class).findAll();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
