@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
@@ -50,15 +51,15 @@ public class MainActivity extends AppCompatActivity {
     private RealmChangeListener entryListener;
     private RealmConfiguration realmConfig;
     private Entry entry;
-    private RecyclerView realmRecyclerView;
+    private RecyclerView recyclerView;
 
     final static int REQ_CODE = 1;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.entry_layout);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
 
         FloatingActionButton addEntryBtn = (FloatingActionButton) findViewById(R.id.addEntryBtn);
@@ -74,15 +75,17 @@ public class MainActivity extends AppCompatActivity {
         // Open the Realm for the UI thread.
         resetRealm();
         realm = Realm.getInstance(realmConfig);
-        realmRecyclerView = (RecyclerView) findViewById(R.id.realm_recycler_view);
-        //OrderedRealmCollection<Entry> entries = realm.where(Entry.class).findAllAsync();
-        //final EntryAdapter entryAdapter = new EntryAdapter(this, entries);
-        realmRecyclerView.setAdapter(new EntryAdapter(this, realm.where(Entry.class).findAllAsync()));
-        realmRecyclerView.setHasFixedSize(true);
-        //realmRecyclerView.setAdapter(entryAdapter);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        setUpRecyclerView();
 
     }
 
+    private void setUpRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new EntryAdapter(this, realm.where(Entry.class).findAllAsync()));
+        recyclerView.setHasFixedSize(true);
+        //recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+    }
     protected void onDestroy() {
         super.onDestroy();
         if (realm != null) {
