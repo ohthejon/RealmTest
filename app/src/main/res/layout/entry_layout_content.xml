@@ -6,7 +6,13 @@
     android:orientation="vertical"
     >
 
-
+    <android.support.v7.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="?attr/colorPrimary"
+        android:textColor="@android:color/white"
+        />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
