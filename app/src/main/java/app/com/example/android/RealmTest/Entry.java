@@ -19,9 +19,13 @@ public class Entry extends RealmObject {
     private double averagePain;
     private String sleepTime;
     private double sleepLength;
+    private int energyLvl;
+    private int stressLvl;
 
     public Entry() {}
 
+
+    //getters and setters
     public String getEntryDate() { return entryDate; }
 
     public void setEntryDate(String entryDate){ this.entryDate = entryDate; }
@@ -54,9 +58,7 @@ public class Entry extends RealmObject {
         return sleepTime;
     }
 
-    public void setSleepTime(String sleepTime){
-        this.sleepTime = sleepTime;
-    }
+    public void setSleepTime(String sleepTime){ this.sleepTime = sleepTime; }
 
     public double getSleepLength() {
         return sleepLength;
@@ -66,4 +68,14 @@ public class Entry extends RealmObject {
         this.sleepLength = sleepLength;
     }
 
+    public int getEnergyLvl() { return energyLvl; }
+
+    public void setEnergyLvl(int energyLvl){ this.energyLvl = energyLvl; }
+
+    public int getStressLvl() { return stressLvl; }
+
+    public void setStressLvl(int stressLvl){ this.stressLvl = stressLvl; }
+
+
 }
+

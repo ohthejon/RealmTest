@@ -3,24 +3,45 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <TextView
+            android:id="@+id/tv_entry_date"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="left"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="test"
+            android:textSize="24sp"
+            android:textColor="@android:color/black"
+            />
 
-    <TextView
-        android:id="@+id/tv_entry_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:padding="4dp"
-        android:textSize="24sp"
-        android:textColor="@android:color/black"
-        />
+        <TextView
+            android:id="@+id/tv_avg_pain"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="test"
 
-    <TextView
-        android:id="@+id/tv_avg_pain"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
-        android:padding="4dp"
-        android:textSize="24sp"
-        android:textColor="@android:color/black" />
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="4dp"
+            android:textSize="24sp"
+            android:textColor="@android:color/black" />
+        <TextView
+            android:id="@+id/tv_energy_lvl"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="test"
+            android:layout_gravity="right"
+            android:padding="4dp"
+            android:textSize="24sp"
+            android:textColor="@android:color/black" />
 
+    </LinearLayout>
 </FrameLayout>
