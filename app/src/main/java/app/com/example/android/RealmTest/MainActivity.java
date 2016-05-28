@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -46,7 +47,7 @@ import io.realm.Sort;
 public class MainActivity extends AppCompatActivity {
 
     private int mHour, mMinute, mYear, mMonth, mDay;
-    EditText pain1, pain2, pain3, sleepL, sleepT, entryDate;
+    EditText pain1, pain2, pain3, sleepL, sleepT, entryDate, energy, stress;
     private Realm realm;
     private RealmChangeListener entryListener;
     private RealmConfiguration realmConfig;
@@ -80,12 +81,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //create the view
     private void setUpRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new EntryAdapter(this, realm.where(Entry.class).findAllSorted("entryDate")));
         recyclerView.setHasFixedSize(true);
-        //recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
     }
+
     protected void onDestroy() {
         super.onDestroy();
         if (realm != null) {
@@ -102,13 +104,30 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater li = LayoutInflater.from(this);
         View dialogView = li.inflate(R.layout.entry_form, null);
 
+        //create the edittext fields
         entryDate = (EditText) dialogView.findViewById(R.id.in_date);
+
         pain1 = (EditText) dialogView.findViewById(R.id.etPainMorn);
+        pain1.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "10")});
+
         pain2 = (EditText) dialogView.findViewById(R.id.etPainMid);
+        pain2.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "10")});
+
         pain3 = (EditText) dialogView.findViewById(R.id.etPainNight);
+        pain3.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "10")});
+
         sleepL = (EditText) dialogView.findViewById(R.id.etSleepLength);
+        sleepL.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "10")});
+
         sleepT = (EditText) dialogView.findViewById(R.id.in_time);
 
+        energy = (EditText) dialogView.findViewById(R.id.etEnergyLvl);
+        energy.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "10")});
+
+        stress = (EditText) dialogView.findViewById(R.id.etStressLvl);
+        stress.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "10")});
+
+        //build the dialog box for entries
         builder.setView(dialogView);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
@@ -119,7 +138,9 @@ public class MainActivity extends AppCompatActivity {
                         Integer.parseInt(pain2.getText().toString()),
                         Integer.parseInt(pain3.getText().toString()),
                         Double.parseDouble(sleepL.getText().toString()),
-                        sleepT.getText().toString()
+                        sleepT.getText().toString(),
+                        Integer.parseInt(energy.getText().toString()),
+                        Integer.parseInt(stress.getText().toString())
                 );
             }
         });
@@ -130,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        //create the datepicker
         entryDate.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch (View v, MotionEvent event){
@@ -157,6 +178,8 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        //create the timepicker
         sleepT.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch (View v, MotionEvent event){
@@ -190,8 +213,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void addEntry(String entryDate, int pain1, int pain2, int pain3, Double sleepL, String sleepT) {
+    public void addEntry(String entryDate, int pain1, int pain2, int pain3, Double sleepL, String sleepT, int energy, int stress) {
 
+        //make sure you find the right averages
         int nonNullPainCount = 3;
         if(pain1 < 1){
             nonNullPainCount--;
@@ -203,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
             nonNullPainCount--;
         }
 
+        //create the entry with edittext attributes
         Entry entry = new Entry();
         entry.setEntryDate(entryDate.toString());
         entry.setPainMorn(pain1);
@@ -211,6 +236,10 @@ public class MainActivity extends AppCompatActivity {
         entry.setAveragePain((pain1+pain2+pain3)/nonNullPainCount);
         entry.setSleepLength(Double.parseDouble(sleepL.toString()));
         entry.setSleepTime(sleepT.toString());
+        entry.setEnergyLvl(energy);
+        entry.setStressLvl(stress);
+
+        //commit the entry to the realm
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(entry);
         realm.commitTransaction();

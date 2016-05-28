@@ -28,7 +28,7 @@ import io.realm.RealmViewHolder;
 public class EntryAdapter extends RealmRecyclerViewAdapter<Entry, EntryAdapter.ViewHolder> {
 
     protected LayoutInflater inflater;
-    public TextView tvEntryDate, tvAvgDayPain;
+    public TextView tvEntryDate, tvAvgDayPain, tvEnergyLvl;
     private OrderedRealmCollection<Entry> adapterData;
     //protected Context context;
     private final RealmChangeListener listener;
@@ -58,6 +58,9 @@ public class EntryAdapter extends RealmRecyclerViewAdapter<Entry, EntryAdapter.V
             super(container);
             tvEntryDate = (TextView) container.findViewById(R.id.tv_entry_date);
             tvAvgDayPain = (TextView) container.findViewById(R.id.tv_avg_pain);
+            tvEnergyLvl = (TextView) container.findViewById(R.id.tv_energy_lvl);
+
+
         }
     }
     public long getItemId(int position) {
@@ -118,6 +121,7 @@ public class EntryAdapter extends RealmRecyclerViewAdapter<Entry, EntryAdapter.V
         viewHolder.data = entry;
         tvEntryDate.setText(entry.getEntryDate());
         tvAvgDayPain.setText(""+entry.getAveragePain());
+        tvEnergyLvl.setText(""+entry.getEnergyLvl());
     }
 
 }
